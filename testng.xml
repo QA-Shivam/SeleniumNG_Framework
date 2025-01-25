@@ -12,7 +12,7 @@
 
     <test name="Test 2">
         <parameter name="browser" value="firefox"/>
-        <parameter name="version" value="131"/>
+        <parameter name="version" value="130"/>
         <parameter name="os" value="win10"/>
         <classes>
             <class name="test_cases.ProductTest" />
