@@ -57,7 +57,7 @@ public class BaseTest {
         if (!runMode.matches("local|remote")) {
             throw new IllegalArgumentException("Invalid runmode specified: " + runMode);
         }
-        if (runMode.equals("remote") && !platform.matches("seleniumgrid|lambdatest")) {
+        if (runMode.equals("remote") && !platform.matches("seleniumgrid|lambdatest|githubactions")) {
             throw new IllegalArgumentException("Invalid platform specified: " + platform);
         }
 
