@@ -58,7 +58,7 @@ jobs:
           cache: maven
       - name: Build using testng xml file
         run: >
-          mvn -B -DtestngXmlFile=$xmlfile -DrunMode=$runmode -Dbrowser=$browser -Dplatform=$platform clean test
+          mvn -B -Dsurefire.suiteXmlFiles=$xmlfile -DrunMode=$runmode -Dbrowser=$browser -Dplatform=$platform clean test
           -Dmaven.test.failure.ignore=true
       
 
