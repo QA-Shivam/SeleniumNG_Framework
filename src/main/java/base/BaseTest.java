@@ -16,6 +16,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.safari.SafariOptions;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
@@ -79,8 +80,18 @@ public class BaseTest {
                             put("selenium_version", "4.0.0");
                             put("w3c", true);
                         }});
+                        driver = new RemoteWebDriver(new URL(remoteURL), options);
                     }
-                    driver = new RemoteWebDriver(new URL(remoteURL), options);
+                    if (platform.equalsIgnoreCase("githubactions")) {
+                        options.addArguments("--headless");
+                        options.addArguments("--no-sandbox");
+                        options.addArguments("--disable-gpu");
+                        options.addArguments("--remote-allow-origins=*");
+                        driver = new ChromeDriver(options);
+                    }
+                    if (platform.equalsIgnoreCase("seleniumgrid")) {
+                        driver = new RemoteWebDriver(new URL(remoteURL), options);
+                    }
                 } else if (browser.equalsIgnoreCase("firefox")) {
                     FirefoxOptions options = new FirefoxOptions();
                     if (platform.equalsIgnoreCase("lambdatest")) {
@@ -92,9 +103,18 @@ public class BaseTest {
                             put("name", applicationName);
                             put("w3c", true);
                         }});
+                        driver = new RemoteWebDriver(new URL(remoteURL), options);
                     }
-
-                    driver = new RemoteWebDriver(new URL(remoteURL), options);
+                    if (platform.equalsIgnoreCase("githubactions")) {
+                        options.addArguments("--headless");
+                        options.addArguments("--no-sandbox");
+                        options.addArguments("--disable-gpu");
+                        options.addArguments("--remote-allow-origins=*");
+                        driver = new FirefoxDriver(options);
+                    }
+                    if (platform.equalsIgnoreCase("seleniumgrid")) {
+                        driver = new RemoteWebDriver(new URL(remoteURL), options);
+                    }
                 } else if (browser.equalsIgnoreCase("safari")) {
                     SafariOptions options = new SafariOptions();
 
@@ -107,9 +127,12 @@ public class BaseTest {
                             put("name", applicationName);
                             put("w3c", true);
                         }});
+                        driver = new RemoteWebDriver(new URL(remoteURL), options);
+                    }
+                    if (platform.equalsIgnoreCase("seleniumgrid")) {
+                        driver = new RemoteWebDriver(new URL(remoteURL), options);
                     }
 
-                    driver = new RemoteWebDriver(new URL(remoteURL), options);
                 } else {
                     throw new IllegalArgumentException("Unsupported browser: " + browser);
                 }
@@ -133,7 +156,7 @@ public class BaseTest {
         driver.manage().window().maximize();
 
         // ExtentTest setup with detailed test name
-        String category = "Browser- " + browser + " | Browser Version- " + version + " | Operating System: " + os + " | Run Mode: " + runMode+ " | Platform: " + platform;
+        String category = "Browser- " + browser + " | Browser Version- " + version + " | Operating System: " + os + " | Run Mode: " + runMode + " | Platform: " + platform;
         ExtentTest test = reports.createTest(iTestResult.getMethod().getMethodName(), iTestResult.getMethod().getDescription()).assignCategory(category);
         ExtentReport.set(test);
 
