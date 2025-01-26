@@ -12,14 +12,13 @@ on:
   workflow_dispatch:
     inputs:
       browser:
-        description: 'Browser to run the tests on'
+        description: 'Select the browser: chrome, firefox, edge, safari'
         type: string
         required: true
         default: 'chrome'
         options:
           - 'chrome'
           - 'firefox'
-          - 'edge'
           - 'safari'
       xmlfile:
         description: 'XML file to run the tests on'
@@ -27,7 +26,7 @@ on:
         required: true
         default: 'testng.xml'
       runmode:
-        description: 'Run mode for the tests'
+        description: 'Select the run mode: local, remote'
         type: string
         required: true
         default: 'remote'
@@ -35,7 +34,7 @@ on:
           - 'local'
           - 'remote'
       platform:
-        description: 'Platform to run the tests on'
+        description: 'Select the platform: seleniumgrid,lambdatest'
         type: string
         required: true
         default: 'githubactions'
