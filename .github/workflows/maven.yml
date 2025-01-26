@@ -59,8 +59,8 @@ jobs:
 
       # Run Tests with Maven
       - name: Build using testng xml file
-        run: > 
-           mvn clean test 
+        run: >
+          mvn clean test 
           -Dsurefire.suiteXmlFiles=${{inputs.xmlfile}} 
           -Drunmode=${{inputs.runmode}} 
           -Dplatform=${{inputs.platform}} 
