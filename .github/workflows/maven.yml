@@ -61,11 +61,11 @@ jobs:
       - name: Build using testng xml file
         run: > 
            mvn clean test 
-          -Dsurefire.suiteXmlFiles=${{inputs.xmlfile}} 
-          -Drunmode=${{inputs.runmode}} 
-          -Dplatform=${{inputs.platform}} 
-          -Dbrowser=${{inputs.browser}}
-          -Dmaven.test.failure.ignore=true
+            -Dsurefire.suiteXmlFiles=${{inputs.xmlfile}} 
+            -Drunmode=${{inputs.runmode}} 
+            -Dplatform=${{inputs.platform}} 
+            -Dbrowser=${{inputs.browser}}
+            -Dmaven.test.failure.ignore=true
 
       # Stop Docker Compose after tests
       - name: Stop Selenium Grid with Docker Compose
