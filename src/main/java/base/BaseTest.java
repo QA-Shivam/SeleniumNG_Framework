@@ -86,7 +86,6 @@ public class BaseTest {
                         options.addArguments("--headless");
                         options.addArguments("--no-sandbox");
                         options.addArguments("--disable-gpu");
-                        options.addArguments("--remote-allow-origins=*");
                         driver = new ChromeDriver(options);
                     }
                     if (platform.equalsIgnoreCase("seleniumgrid")) {
@@ -109,7 +108,6 @@ public class BaseTest {
                         options.addArguments("--headless");
                         options.addArguments("--no-sandbox");
                         options.addArguments("--disable-gpu");
-                        options.addArguments("--remote-allow-origins=*");
                         driver = new FirefoxDriver(options);
                     }
                     if (platform.equalsIgnoreCase("seleniumgrid")) {
