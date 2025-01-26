@@ -4,7 +4,7 @@
     <test name="Test 1">
         <parameter name="browser" value="chrome"/>
         <parameter name="version" value="130"/>
-        <parameter name="os" value="win11"/>
+        <parameter name="os" value="win10"/>
         <classes>
             <class name="test_cases.LoginTest" />
         </classes>
