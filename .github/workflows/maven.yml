@@ -9,6 +9,36 @@
 name: Java CI with Maven and Selenium Grid
 
 on:
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: 'Browser to run the tests on'
+        type: string
+        required: true
+        default: 'chrome'
+        options:
+          - 'chrome'
+          - 'firefox'
+          - 'edge'
+          - 'safari'
+      xmlfile:
+        description: 'XML file to run the tests on'
+        type: string
+        required: true
+        default: 'testng.xml'
+      runmode:
+        description: 'Run mode for the tests'
+        type: string
+        required: true
+        default: 'remote'
+        options:
+          - 'local'
+          - 'remote'
+      platform:
+        description: 'Platform to run the tests on'
+        type: string
+        required: true
+        default: 'githubactions'
   push:
     branches: [ "master" ]
   pull_request:
@@ -27,6 +57,15 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
-      run: mvn clean test
+    - name: Build using testng xml file
+      run: >
+        mvn -B -DtestngXmlFile=$xmlfile -DrunMode=$runmode -Dbrowser=$browser -Dplatform=$platform clean test
+        -Dmaven.test.failure.ignore=true
 
+
+#Report Generation
+    - name: Upload Report
+      uses: actions/setup-java@v4
+      with:
+        name: SparkHTML
+        path: ./reports/*.html
