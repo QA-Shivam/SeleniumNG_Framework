@@ -1,4 +1,5 @@
 Automation Testing with Docker and CI/CD
+
 Project Overview
 This project demonstrates automation testing using Docker and CI/CD principles, aimed at making software testing efficient, scalable, and repeatable. It was developed as part of my learning experience in the “Proficient Automation Tester by Leveraging Docker with CI/CD” course on Udemy.
 
