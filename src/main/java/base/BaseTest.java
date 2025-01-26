@@ -37,7 +37,7 @@ public class BaseTest {
 
     @Parameters({"browser", "version", "os"})
     @BeforeMethod
-    public void beforeTest(String browser, String version, String os, ITestResult iTestResult) throws InterruptedException {
+    public void beforeTest(String browser, @Optional String version, String os, ITestResult iTestResult) throws InterruptedException {
         ConfigLoader config = new ConfigLoader();
         String applicationurl = config.getProperty("url");
         String configBrowser = config.getProperty("browser");
