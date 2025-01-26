@@ -50,22 +50,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-    - name: Build using testng xml file
-      run: >
-        mvn -B -DtestngXmlFile=$xmlfile -DrunMode=$runmode -Dbrowser=$browser -Dplatform=$platform clean test
-        -Dmaven.test.failure.ignore=true
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build using testng xml file
+        run: >
+          mvn -B -DtestngXmlFile=$xmlfile -DrunMode=$runmode -Dbrowser=$browser -Dplatform=$platform clean test
+          -Dmaven.test.failure.ignore=true
+      
 
-
-#Report Generation
-    - name: Upload Report
-      uses: actions/setup-java@v4
-      with:
-        name: SparkHTML
-        path: ./reports/*.html
+      #Report Generation
+      - name: Upload Report
+        uses: actions/setup-java@v4
+        with:
+          name: SparkHTML
+          path: ./reports/*.html
