@@ -57,10 +57,11 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build using testng xml file
-        run: >
-          mvn -B -Dsurefire.suiteXmlFiles=$xmlfile -DrunMode=$runmode -Dbrowser=$browser -Dplatform=$platform clean test
-          -Dmaven.test.failure.ignore=true
-      
+        run: mvn clean test
+          -Dsurefire.suiteXmlFiles=${{inputs.xmlfile}}
+          -Drunmode=${{inputs.runmode}}
+          -Dplatform=${{inputs.platform}}
+          -Dbrowser=${{inputs.browser}}
 
       #Report Generation
       - name: Upload Report
