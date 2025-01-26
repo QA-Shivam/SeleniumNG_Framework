@@ -59,7 +59,7 @@ jobs:
       - name: Start Selenium Grid with Docker Compose
         if: ${{ inputs.platform == 'seleniumgrid' }}
         run: |
-          docker-compose -f docker/docker-compose.yml up -d
+          docker-compose -f docker/docker-compose-grid.yml up -d
 
       # Run Tests with Maven
       - name: Build using testng xml file
@@ -73,7 +73,7 @@ jobs:
       - name: Stop Selenium Grid with Docker Compose
         if: ${{ inputs.platform == 'seleniumgrid' }}
         run: |
-          docker-compose -f docker/docker-compose.yml down
+          docker-compose -f docker/docker-compose-grid.yml down
 
       # Upload the test report
       - name: Upload Report
