@@ -30,3 +30,5 @@ WebDriver Management: Selenium 4
 Version Control: GitHub (for code hosting and GitHub Actions for CI/CD automation)
 CI/CD Tool: Jenkins (for managing continuous integration and delivery pipelines)
 Containerization: Docker (for running tests in isolated, consistent environments)
+
+[INFO] For a comprehensive overview, please refer to the document "selenium-docker.pdf" uploaded in the repository.
