@@ -7,21 +7,17 @@ on:
         description: 'Select the browser: chrome, firefox, edge, safari'
         type: string
         default: 'chrome'
-        options:
-          - 'chrome'
-          - 'firefox'
-          - 'safari'
+
       xmlfile:
         description: 'XML file to run the tests on'
         type: string
         default: 'testng.xml'
+
       runmode:
         description: 'Select the run mode: local, remote'
         type: string
         default: 'remote'
-        options:
-          - 'local'
-          - 'remote'
+
       platform:
         description: 'Select the platform: seleniumgrid,lambdatest'
         type: string
