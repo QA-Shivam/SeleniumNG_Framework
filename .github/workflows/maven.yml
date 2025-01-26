@@ -58,21 +58,21 @@ jobs:
       # Start Docker Compose for Selenium Grid if platform is seleniumgrid
       - name: Start Selenium Grid with Docker Compose
         if: ${{ inputs.platform == 'seleniumgrid' }}
-        run: |
+        run:
           docker-compose -f docker/docker-compose-grid.yml up 
 
       # Run Tests with Maven
       - name: Build using testng xml file
-        run: mvn clean test \
-          -Dsurefire.suiteXmlFiles=${{inputs.xmlfile}} \
-          -Drunmode=${{inputs.runmode}} \
-          -Dplatform=${{inputs.platform}} \
+        run: mvn clean test 
+          -Dsurefire.suiteXmlFiles=${{inputs.xmlfile}} 
+          -Drunmode=${{inputs.runmode}} 
+          -Dplatform=${{inputs.platform}} 
           -Dbrowser=${{inputs.browser}}
 
       # Stop Docker Compose after tests
       - name: Stop Selenium Grid with Docker Compose
         if: ${{ inputs.platform == 'seleniumgrid' }}
-        run: |
+        run:
           docker-compose -f docker/docker-compose-grid.yml down
 
       # Upload the test report
