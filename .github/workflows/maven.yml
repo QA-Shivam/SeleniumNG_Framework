@@ -65,7 +65,7 @@ jobs:
 
       #Report Generation
       - name: Upload Report
-        uses: actions/setup-java@v4
+        uses: actions/upload-java@v4
         with:
           name: SparkHTML
           path: ./reports/*.html
