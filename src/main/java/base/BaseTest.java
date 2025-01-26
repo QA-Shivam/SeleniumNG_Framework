@@ -40,9 +40,9 @@ public class BaseTest {
     public void beforeTest(String browser, @Optional String version, @Optional String os, ITestResult iTestResult) throws InterruptedException {
         ConfigLoader config = new ConfigLoader();
         String applicationurl = config.getProperty("url");
-        String configBrowser = config.getProperty("browser");
-        String runMode = config.getProperty("runmode");
-        String platform = config.getProperty("platform");
+        String configBrowser = System.getProperty("browser", config.getProperty("browser"));
+        String runMode = System.getProperty("runmode", config.getProperty("runmode"));
+        String platform = System.getProperty("platform", config.getProperty("platform"));
         String lambdaTestURL = config.getProperty("lambdaTestURL");
         String seleniumGridURL = config.getProperty("seleniumGridURL");
         String applicationName = config.getProperty("applicationname");
