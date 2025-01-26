@@ -6,7 +6,6 @@ on:
       browser:
         description: 'Select the browser: chrome, firefox, edge, safari'
         type: string
-        required: true
         default: 'chrome'
         options:
           - 'chrome'
@@ -15,20 +14,17 @@ on:
       xmlfile:
         description: 'XML file to run the tests on'
         type: string
-        required: true
         default: 'testng.xml'
       runmode:
         description: 'Select the run mode: local, remote'
         type: string
-        required: true
         default: 'remote'
         options:
           - 'local'
           - 'remote'
       platform:
-        description: 'Select the platform: seleniumgrid, lambdatest'
+        description: 'Select the platform: seleniumgrid,lambdatest'
         type: string
-        required: true
         default: 'githubactions'
 
   push:
@@ -55,42 +51,26 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
-      # Set default values for inputs if not set
-      - name: Set default input values
-        id: set_defaults
-        run: |
-          echo "INPUT_BROWSER=${{ github.event.inputs.browser || 'chrome' }}" >> $GITHUB_ENV
-          echo "INPUT_XMLFILE=${{ github.event.inputs.xmlfile || 'testng.xml' }}" >> $GITHUB_ENV
-          echo "INPUT_RUNMODE=${{ github.event.inputs.runmode || 'remote' }}" >> $GITHUB_ENV
-          echo "INPUT_PLATFORM=${{ github.event.inputs.platform || 'githubactions' }}" >> $GITHUB_ENV
-
-      # Debug: Check the values of inputs
-      - name: Debug input values
-        run: |
-          echo "Browser: ${{ env.INPUT_BROWSER }}"
-          echo "XML File: ${{ env.INPUT_XMLFILE }}"
-          echo "Run Mode: ${{ env.INPUT_RUNMODE }}"
-          echo "Platform: ${{ env.INPUT_PLATFORM }}"
-
       # Start Docker Compose for Selenium Grid if platform is seleniumgrid
       - name: Start Selenium Grid with Docker Compose
-        if: ${{ env.INPUT_PLATFORM == 'seleniumgrid' }}
-        run: |
-          docker-compose -f docker/docker-compose-grid.yml up -d
+        if: ${{ inputs.platform == 'seleniumgrid' }}
+        run:
+          docker-compose -f docker/docker-compose-grid.yml up
 
       # Run Tests with Maven
-      - name: Build using TestNG XML file
-        run: mvn clean test \
-          -Dsurefire.suiteXmlFiles=${{ env.INPUT_XMLFILE }} \
-          -Drunmode=${{ env.INPUT_RUNMODE }} \
-          -Dplatform=${{ env.INPUT_PLATFORM }} \
-          -Dbrowser=${{ env.INPUT_BROWSER }} \
-          -Dmaven.test.failure.ignore=true
+      - name: Build using testng xml file
+        run: > 
+           mvn clean test 
+            -Dsurefire.suiteXmlFiles=${{github.event.inputs.xmlfile}} 
+            -Drunmode=${{github.event.inputs.runmode}} 
+            -Dplatform=${{github.event.inputs.platform}} 
+            -Dbrowser=${{github.event.inputs.browser}}
+            -Dmaven.test.failure.ignore=true
 
       # Stop Docker Compose after tests
       - name: Stop Selenium Grid with Docker Compose
-        if: ${{ env.INPUT_PLATFORM == 'seleniumgrid' }}
-        run: |
+        if: ${{ inputs.platform == 'seleniumgrid' }}
+        run:
           docker-compose -f docker/docker-compose-grid.yml down
 
       # Upload the test report
