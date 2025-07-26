@@ -9,11 +9,14 @@ import java.time.format.DateTimeFormatter;
 
 public class ExtentReport {
     public static ExtentReports reports;
+    public static String reportPath;
     static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
     public static ExtentReports getReportObject()
     {
 
-        String reportPath = "./reports/"+dtf.format(LocalDateTime.now());
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmm");
+        reportPath = "./reports/Swag_Labs_" + dtf.format(LocalDateTime.now()) + ".html";
         //System.out.println(reportPath);
         ExtentSparkReporter sparkReporter = new ExtentSparkReporter(reportPath);
 

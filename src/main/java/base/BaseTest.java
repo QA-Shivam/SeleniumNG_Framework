@@ -16,10 +16,10 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.safari.SafariOptions;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
+import utils.SlackIntegration;
 
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -28,6 +28,8 @@ import java.util.HashMap;
 import static base.BasePage.convertSSToBase64;
 import static base.BasePage.getScreenshot;
 import static utils.ExtentReport.getReportObject;
+import static utils.ExtentReport.reportPath;
+import static utils.SlackIntegration.sendSlackMessage;
 
 public class BaseTest {
     private static final Logger logger = LogManager.getLogger(BaseTest.class);
@@ -35,10 +37,15 @@ public class BaseTest {
     public static ExtentReports reports = getReportObject();
     protected WebDriver driver;
 
+    private static int totalTests = 0;
+    private static int passedTests = 0;
+    private static int failedTests = 0;
+    private static int skippedTests = 0;
+    ConfigLoader config = new ConfigLoader();
+
     @Parameters({"browser", "version", "os"})
     @BeforeMethod
     public void beforeTest(String browser, @Optional String version, @Optional String os, ITestResult iTestResult) throws InterruptedException {
-        ConfigLoader config = new ConfigLoader();
         String applicationurl = config.getProperty("url");
         String configBrowser = System.getProperty("browser", config.getProperty("browser"));
         String runMode = System.getProperty("runmode", config.getProperty("runmode"));
@@ -166,27 +173,43 @@ public class BaseTest {
 
     @AfterMethod
     public void afterTest(ITestResult iTestResult) {
+        totalTests++; // increment total count
+        String testName = iTestResult.getMethod().getMethodName();
+        String screenshotPath = getScreenshot(testName + ".jpg", driver);
+        String base64Image = convertSSToBase64(screenshotPath);
         if (iTestResult.getStatus() == ITestResult.FAILURE) {
+            failedTests++; // track failure
             ExtentReport.get().log(Status.FAIL, "Test Failed Due to: " + iTestResult.getThrowable());
-            String screenshotPath = getScreenshot(iTestResult.getMethod().getMethodName() + ".jpg", driver);
-            ExtentReport.get().fail("Test Failed", MediaEntityBuilder.createScreenCaptureFromBase64String(convertSSToBase64(screenshotPath)).build());
+            ExtentReport.get().fail("Test Failed", MediaEntityBuilder.createScreenCaptureFromBase64String(base64Image).build());
 
         } else if (iTestResult.getStatus() == ITestResult.SUCCESS) {
-            ExtentReport.get().log(Status.PASS, MarkupHelper.createLabel(iTestResult.getMethod().getMethodName(), ExtentColor.GREEN));
-            String screenshotPath = getScreenshot(iTestResult.getMethod().getMethodName() + ".jpg", driver);
-            ExtentReport.get().pass("Test Pass", MediaEntityBuilder.createScreenCaptureFromBase64String(convertSSToBase64(screenshotPath)).build());
+            passedTests++; // track success
+            ExtentReport.get().log(Status.PASS, MarkupHelper.createLabel(testName, ExtentColor.GREEN));
+            ExtentReport.get().pass("Test Pass", MediaEntityBuilder.createScreenCaptureFromBase64String(base64Image).build());
+
         } else if (iTestResult.getStatus() == ITestResult.SKIP) {
-            ExtentReport.get().log(Status.SKIP, MarkupHelper.createLabel(iTestResult.getMethod().getMethodName(), ExtentColor.ORANGE));
-            String screenshotPath = getScreenshot(iTestResult.getMethod().getMethodName() + ".jpg", driver);
-            ExtentReport.get().skip("Test Skipped", MediaEntityBuilder.createScreenCaptureFromBase64String(convertSSToBase64(screenshotPath)).build());
+            skippedTests++; // track skip
+            ExtentReport.get().log(Status.SKIP, MarkupHelper.createLabel(testName, ExtentColor.ORANGE));
+            ExtentReport.get().skip("Test Skipped", MediaEntityBuilder.createScreenCaptureFromBase64String(base64Image).build());
         }
         ExtentReport.get().info("Test End Time: " + LocalDateTime.now());
         driver.quit();
     }
 
-    @AfterClass
-    public void afterClass() {
+    @AfterSuite
+    public void afterSuite() {
         reports.flush();
+        if (config.getProperty("sendSlackReport").equalsIgnoreCase("true")) {
+            String fullReportPath = System.getProperty("user.dir") + "/" + reportPath;
+            String message = String.format(
+                    "*🧩 Test Automation Summary:*\n" +
+                            "• Total Test: *%d*\n" +
+                            "• ✅ Passed: *%d*\n" +
+                            "• ❌ Failed: *%d*\n" +
+                            "• ⚠️ Skipped: *%d*\n\n" ,
+                    totalTests, passedTests, failedTests, skippedTests
+            );
+            sendSlackMessage(message, fullReportPath);
+        }
     }
-
 }
