@@ -10,8 +10,8 @@ import java.nio.file.Files;
 
 public class SlackIntegration {
 
-    private static final String SLACK_BOT_TOKEN = "xoxb-9253440109203-9242806242391-UQoKgRb6hKRZohUnOMO50uqz";
-    private static final String CHANNEL_ID = "C097M575EMS"; // Your Slack channel ID
+    private static final String SLACK_BOT_TOKEN = "";
+    private static final String CHANNEL_ID = ""; // Your Slack channel ID
     private static final OkHttpClient client = new OkHttpClient();
 
     public static void sendSlackMessage(String messageText, String reportPath) {
