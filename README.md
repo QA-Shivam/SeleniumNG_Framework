@@ -47,8 +47,8 @@ Sends a rich formatted message via bot in your specified channel
 You can enable or disable this feature via a flag in config.properties:
 properties
 sendSlackReport=true
-botToken=xoxb-your-bot-token
-channel=your-channel-id
+and add your slack bot token & channel id in secret text and fetch form jenkins to read in SlackIntegartion utility class at run time.
+
 Sample Slack Message
 <img width="1485" height="422" alt="Screenshot 2025-07-30 074605" src="https://github.com/user-attachments/assets/62484ea3-f074-45c1-a90c-e1cd9aed3902" />
 
