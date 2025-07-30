@@ -1,0 +1,11 @@
+source config/config.properties
+
+BROWSER="${INPUT_BROWSER:-$browser}"
+XMLFILE="${INPUT_XMLFILE:-$xmlfile}"
+RUNMODE="${INPUT_RUNMODE:-$runmode}"
+PLATFORM="${INPUT_PLATFORM:-$platform}"
+
+echo "BROWSER=$BROWSER" >> $GITHUB_ENV
+echo "XMLFILE=$XMLFILE" >> $GITHUB_ENV
+echo "RUNMODE=$RUNMODE" >> $GITHUB_ENV
+echo "PLATFORM=$PLATFORM" >> $GITHUB_ENV

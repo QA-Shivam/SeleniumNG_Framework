@@ -23,7 +23,7 @@ on:
           - 'local'
           - 'remote'
       platform:
-        description: 'Select the platform: seleniumgrid,lambdatest'
+        description: 'Select the platform: seleniumgrid, lambdatest'
         type: string
         default: 'githubactions'
 
@@ -39,7 +39,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Set up JDK 17
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -47,32 +46,35 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # Set up Docker
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
-      # Start Docker Compose for Selenium Grid if platform is seleniumgrid
-      - name: Start Selenium Grid with Docker Compose
-        if: ${{ inputs.platform == 'seleniumgrid' }}
-        run:
-          docker-compose -f docker/docker-compose-grid.yml up
+      - name: Load Config and Merge Inputs
+        run: |
+          chmod +x ./set_env.sh
+          ./set_env.sh
+        env:
+          INPUT_BROWSER: ${{ github.event.inputs.browser }}
+          INPUT_XMLFILE: ${{ github.event.inputs.xmlfile }}
+          INPUT_RUNMODE: ${{ github.event.inputs.runmode }}
+          INPUT_PLATFORM: ${{ github.event.inputs.platform }}
 
-      # Run Tests with Maven
-      - name: Build using testng xml file
+      - name: Start Selenium Grid with Docker Compose
+        if: ${{ env.PLATFORM == 'seleniumgrid' }}
+        run: docker-compose -f docker/docker-compose-grid.yml up -d
+
+      - name: Run Tests with Maven
         run: >
           mvn clean test 
-          -Dsurefire.suiteXmlFiles=${{inputs.xmlfile}} 
-          -Drunmode=${{inputs.runmode}} 
-          -Dplatform=${{inputs.platform}} 
-          -Dbrowser=${{inputs.browser}}
+          -Dsurefire.suiteXmlFiles=${{ env.XMLFILE }} 
+          -Drunmode=${{ env.RUNMODE }} 
+          -Dplatform=${{ env.PLATFORM }} 
+          -Dbrowser=${{ env.BROWSER }}
 
-      # Stop Docker Compose after tests
       - name: Stop Selenium Grid with Docker Compose
-        if: ${{ inputs.platform == 'seleniumgrid' }}
-        run:
-          docker-compose -f docker/docker-compose-grid.yml down
+        if: ${{ env.PLATFORM == 'seleniumgrid' }}
+        run: docker-compose -f docker/docker-compose-grid.yml down
 
-      # Upload the test report
       - name: Upload Report
         uses: actions/upload-artifact@v4
         with:
