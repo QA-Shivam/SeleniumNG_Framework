@@ -62,6 +62,3 @@ Just push your changes or create a PR to trigger the pipeline.
 
 📄 Documentation
 Please refer to selenium-docker.pdf in the repo for a deeper explanation of architecture, setup, and configurations.
-
-📬 Contact
-Created with 💻 by Shivam Kumar
