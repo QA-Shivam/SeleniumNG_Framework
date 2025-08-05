@@ -15,7 +15,6 @@ public class SlackIntegration {
     private static final OkHttpClient client = new OkHttpClient();
 
     public static void sendSlackMessage(String messageText, String reportPath) {
-        sendMessageToSlack(messageText);
 
         File file = new File(reportPath);
         if (!file.exists()) {
@@ -43,7 +42,7 @@ public class SlackIntegration {
                 return;
             }
 
-            boolean complete = completeUpload(fileId, fileName, CHANNEL_ID);
+            boolean complete = completeUpload(fileId, fileName, CHANNEL_ID, messageText);
             if (complete) {
                 System.out.println("✅ Slack file upload completed and posted to channel.");
             } else {
@@ -136,7 +135,7 @@ public class SlackIntegration {
     }
 
 
-    private static boolean completeUpload(String fileId, String filename, String channelId) throws IOException {
+    private static boolean completeUpload(String fileId, String filename, String channelId, String message) throws IOException {
         JSONObject fileEntry = new JSONObject()
                 .put("id", fileId)
                 .put("title", filename);
@@ -144,7 +143,7 @@ public class SlackIntegration {
         JSONObject payload = new JSONObject()
                 .put("files", new JSONArray().put(fileEntry))
                 .put("channel_id", channelId)
-                .put("initial_comment", "📎 *Attached HTML Report:* `" + filename + "`");
+                .put("initial_comment",message);
 
         Request request = new Request.Builder()
                 .url("https://slack.com/api/files.completeUploadExternal")
